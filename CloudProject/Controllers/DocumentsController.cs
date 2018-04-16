@@ -6,11 +6,26 @@ using System.Web;
 using System.Web.Mvc;
 using CloudProject.Models;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace CloudProject.Controllers
 {
     public class DocumentsController : Controller
     {
+        [HttpPost]
+        [Authorize]
+        public ActionResult Find(string text)
+        {
+            List<Document> documents = new List<Document>();
+            if (!ModelState.IsValid || string.IsNullOrEmpty(text)) return View("All", documents);
+            using (ISession session = NHibertnateSession.OpenSession())
+            {
+                documents = session.Query<Document>().Where(d => d.Author == User.Identity.Name && d.Name.Contains(text)).ToList();
+            }
+
+            return View("All", documents);
+        }
+
         [HttpGet]
         [Authorize]
         public ActionResult All()
