@@ -1,0 +1,43 @@
+﻿@model IEnumerable<CloudProject.Models.Document>
+
+@{
+    ViewBag.Title = "Мои документы";
+    Session["model"] = Model;
+}
+
+<h2>Мои документы</h2>
+
+<table class="table">
+    <tr>
+        <td>
+            @Html.ActionLink("Название", "Sort", new {sortBy = "Name"})
+        </td>
+        <td>
+            @Html.ActionLink("Дата", "Sort", new { sortBy = "Date"})
+        </td>
+        <td>
+            @Html.DisplayName("Автор")
+        </td>
+        <td>
+            @Html.DisplayName("Ссылка")
+        </td>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Author)
+        </td>
+        <td>
+            @Html.ActionLink("Открыть","Image","Documents",new {link = item.Link}, null)
+        </td>
+    </tr>
+}
+
+</table>

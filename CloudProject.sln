@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudProject", "CloudProject\CloudProject.csproj", "{EAAABB5C-DBE0-42C2-9920-1C19F11E1BEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EAAABB5C-DBE0-42C2-9920-1C19F11E1BEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAAABB5C-DBE0-42C2-9920-1C19F11E1BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAAABB5C-DBE0-42C2-9920-1C19F11E1BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAAABB5C-DBE0-42C2-9920-1C19F11E1BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
