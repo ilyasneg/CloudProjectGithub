@@ -9,15 +9,15 @@ Test project
 
 USE [CloudDB]
 GO
-/****** Object:  StoredProcedure [dbo].[AddDocument]    Script Date: 16.04.2018 20:43:29 ******/
+/****** Object:  StoredProcedure [dbo].[AddDocument]    Script Date: 16.04.2018 22:37:10 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 ALTER PROCEDURE [dbo].[AddDocument]
-(@name char(32), @date datetime, @author char(32), @link char(32))
+(@name char(32), @date datetime, @author char(32), @link char(32), @contentPath nvarchar(MAX))
 AS
 BEGIN
-	INSERT INTO CloudDB.dbo.SingleDocument([Name], [Date], [Author], [Link]) 
-    VALUES (@name, @date, @author, @link);
+	INSERT INTO CloudDB.dbo.SingleDocument([Name], [Date], [Author], [Link], [ContentPath]) 
+    VALUES (@name, @date, @author, @link, @contentPath);
 END
