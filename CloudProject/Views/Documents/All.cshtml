@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Мои документы";
     Session["model"] = Model;
+    const int maxNameLength = 30;
 }
 
 <h2>Мои документы</h2>
@@ -10,10 +11,12 @@
 <table class="table">
     <tr>
         <td>
-            @Html.ActionLink("Название", "Sort", new {sortBy = "Name"})
+            @Html.ActionLink("Название", "Sort", new {sortBy = "Name", directSort = Session["NameDirectSort"] })
+            @(Session["NameDirectSort"] as bool? == true ? "↑" : "↓") 
         </td>
         <td>
-            @Html.ActionLink("Дата", "Sort", new { sortBy = "Date"})
+            @Html.ActionLink("Дата", "Sort", new { sortBy = "Date", directSort = Session["DateDirectSort"] })
+            @(Session["DateDirectSort"] as bool? == true ? "↑" : "↓")
         </td>
         <td>
             @Html.DisplayName("Автор")
@@ -26,16 +29,21 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @{
+                var name = item.Name.Trim();
+                var t = name.Length > maxNameLength ? $"{name.Substring(0, maxNameLength)}..." : name;
+                @t
+            }
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Date)
+            @item.Date
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Author)
+            @item.Author
         </td>
         <td>
-            @Html.ActionLink("Открыть","Image","Documents",new {link = item.Link}, null)
+            <img src="@Url.Action("Image", "Documents", new {link = item.Link}, null)" width="100" height="100"/>
+            @Html.ActionLink("Открыть", "Image", "Documents", new {link = item.Link}, null)
         </td>
     </tr>
 }

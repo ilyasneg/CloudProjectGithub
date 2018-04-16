@@ -12,5 +12,6 @@ namespace CloudProject.Models
         public virtual DateTime Date { get; set; }
         public virtual string Author { get; set; }
         public virtual string Link { get; set; }
+        public virtual string ContentPath { get; set; }
     }
 }

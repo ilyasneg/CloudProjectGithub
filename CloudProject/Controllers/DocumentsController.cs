@@ -15,6 +15,9 @@ namespace CloudProject.Controllers
         [Authorize]
         public ActionResult All()
         {
+            Session["NameDirectSort"] = true;
+            Session["DateDirectSort"] = true;
+
             List<Document> documents = new List<Document>();
             if (!ModelState.IsValid) return View(documents);
             using (ISession session = NHibertnateSession.OpenSession())
@@ -36,19 +39,28 @@ namespace CloudProject.Controllers
         [Authorize]
         public ActionResult Add(Document model)
         {
-            if (!ModelState.IsValid) return View(model);
-            var file = Request.Files[0];
-            if (file == null) return View(model);
-            using (ISession session = NHibertnateSession.OpenSession())
+            try
             {
-                DateTime dateTime = DateTime.Now;
-                string timeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds.ToString();
-                var link = MD5Class.Calculate($"{timeStamp}{model.Name}").ToLower();
-                var fileExt = Path.GetExtension(file.FileName);
-                var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), $"{link}{fileExt}");
-                file.SaveAs(path);
-                session.CreateSQLQuery("EXEC AddDocument @name = '" + model.Name + "',@date = '"+ dateTime +"',@author = '" + User.Identity.Name + "',@link = '" + link + "'")
-                    .ExecuteUpdate();
+                if (!ModelState.IsValid) return View(model);
+                var file = Request.Files[0];
+                if (file == null) return View(model);
+                using (ISession session = NHibertnateSession.OpenSession())
+                {
+                    DateTime dateTime = DateTime.Now;
+                    string timeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds.ToString();
+                    var link = MD5Class.Calculate($"{timeStamp}{model.Name}").ToLower();
+                    var fileExt = Path.GetExtension(file.FileName);
+                    var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), $"{link}{fileExt}");
+                    file.SaveAs(path);
+                    session.CreateSQLQuery("EXEC AddDocument @name = '" + model.Name + "',@date = '" + dateTime +
+                                           "',@author = '" + User.Identity.Name + "',@link = '" + link +
+                                           "', @contentPath = '" + path + "'")
+                        .ExecuteUpdate();
+                }
+            }
+            catch
+            {
+                // ignored
             }
             return RedirectToAction("All", "Documents");
         }
@@ -57,23 +69,41 @@ namespace CloudProject.Controllers
         public ActionResult Image(string link)
         {
             var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), $"{link}.png");
-            return base.File(path, "image/jpeg");
+            return File(path, "image/jpeg");
         }
 
         [HttpGet]
         [Authorize]
-        public ActionResult Sort(string sortBy)
+        public ActionResult Sort(string sortBy, bool? directSort)
         {
-            var model = (List<Document>)Session["model"];
+            var model = Session["model"] as List<Document>;
             if (model == null) return View("All", new List<Document>());
-            //TODO сортировка в одном направлении (нужно сделать в обе стороны)
+
             switch (sortBy)
             {
                 case "Name":
-                    model = model.OrderBy(p => p.Name).ToList();
+                    if (directSort == true)
+                    {
+                        model = model.OrderBy(p => p.Name).ToList();
+                        Session["NameDirectSort"] = false;
+                    }
+                    else
+                    {
+                        model = model.OrderByDescending(p => p.Name).ToList();
+                        Session["NameDirectSort"] = true;
+                    }
                     break;
                 case "Date":
-                    model = model.OrderBy(p => p.Date).ToList();
+                    if (directSort == true)
+                    {
+                        model = model.OrderBy(p => p.Date).ToList();
+                        Session["DateDirectSort"] = false;
+                    }
+                    else
+                    {
+                        model = model.OrderByDescending(p => p.Date).ToList();
+                        Session["DateDirectSort"] = true;
+                    }
                     break;
             }
 

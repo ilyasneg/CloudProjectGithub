@@ -9,5 +9,6 @@
     <property name="Date" />
     <property name="Author" />
     <property name="Link" />
+    <property name="ContentPath" />
   </class>
 </hibernate-mapping>
