@@ -79,7 +79,7 @@ namespace CloudProject.Controllers
 
                 ModelState.AddModelError("", "Пользователь с таким логином уже существует");
             }
-            catch(Exception exception)
+            catch
             {
                 return View(model);
             }
